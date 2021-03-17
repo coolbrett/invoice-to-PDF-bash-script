@@ -91,10 +91,12 @@ clength=$(echo $categories | wc -w)
 
 #Asking for the number of items for the categories
 numbers=""
+category=""
 index=0
 while [ $clength -gt $index ]
 do 
-    echo -n "Please enter the number of \"" "\" items you want to purchase > "
+    val=$(echo $categories | cut -d" " -f$(($index+1)))
+    echo -n "Please enter the number of \""$val"\" items you want to purchase > "
     read num
     if [ "$numbers" = "" ]
     then
@@ -102,17 +104,20 @@ do
     else
         numbers="$numbers,$num"  
     fi
+    if [ "$category" = "" ]
+    then
+        category=$val
+    else
+        category="$category, $val"
+    fi
     ((index++))
 done
-
-
-exit 0
 
 #create the file 
 touch $filename
 echo "customer:"$name >> $filename
 echo "address:"$street", "$city", "$state >> $filename
-echo "categories:" >> $filename
+echo "categories:"$category >> $filename
 #TODO categories
 echo "items:" $numbers >> $filename
 
