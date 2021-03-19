@@ -67,7 +67,7 @@ read city
 
 if [ "$state" != "NC" ] #Checking to see if out of state
 then
-    echo -n "Please enter state"
+    echo -n "Please enter state > "
     read state
     length=`echo $state | awk '{print length}'`
   
