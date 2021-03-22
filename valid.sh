@@ -14,6 +14,7 @@
 #   exit 4: File is not able to be read / accessible
 #   exit 5: Missing headers
 #   exit 6: NC isn't state in .iso file
+#   exit 7: More categories than items
 
 #first step is to check argument count
 filename=$1
@@ -55,3 +56,23 @@ if [ "$extension" == "iso" ]; then
 fi
 
 #Checking to see if item count is valid for amount of categories
+
+#counting commas in items to get number of categories
+line=$(awk 'END{print substr($0, 8)}' "$filename")
+Field_Separator=$IFS
+IFS=,
+count=0
+items=0
+for character in $line
+do
+    ((count++))
+    items=$(expr $items + "$character")
+done
+IFS=$Field_Separator
+#echo "count is: $count"
+#echo "items: $items"
+
+if [ "$count" -gt "$items" ]; then
+    echo "ERROR: invalid item quantities: $count categories but $items items"
+    exit 7
+fi
