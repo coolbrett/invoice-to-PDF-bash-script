@@ -69,8 +69,6 @@ do
     items=$(expr $items + "$character")
 done
 IFS=$Field_Separator
-#echo "count is: $count"
-#echo "items: $items"
 
 if [ "$count" -gt "$items" ]; then
     echo "ERROR: invalid item quantities: $count categories but $items items"
