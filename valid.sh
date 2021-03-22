@@ -35,8 +35,8 @@ if [ "$extension" != "iso" ] && [ "$extension" != "oso" ]; then
     exit 4
 fi
 
-#Checking for missing headers, statement below ignores empty lines and lines that have only spaces/tabs
-count=$(sed '/^[[:blank:]]*$/d' $filename | wc -l)
+#Checking for missing headers, statement below ignores empty lines and lines that have only spaces/tabs in file
+count=$(sed '/^[[:blank:]]*$/d' "$filename" | wc -l)
 
 if [ "$count" -lt 4 ]; then
     echo "ERROR: Missing header line"
