@@ -13,6 +13,7 @@
 #   exit 3: Length of state is not 2
 #   exit 4: File is not able to be read / accessible
 #   exit 5: Missing headers
+#   exit 6: NC isn't state in .iso file
 
 #first step is to check argument count
 filename=$1
@@ -43,3 +44,14 @@ if [ "$count" -lt 4 ]; then
     echo "Last header line: $(awk -v line="$count" '{if(NR==line) print $0}' "$filename")"
     exit 5
 fi
+
+#Checking for NC as state in .iso files
+if [ "$extension" == "iso" ]; then
+    state="$(awk 'NR==2 {print substr($0, length($0)-1)}' "$filename")"
+    if [ "$state" != "NC" ]; then
+        echo "ERROR: State in .iso invoice is not NC --> State found was: $state"
+        exit 6
+    fi
+fi
+
+#Checking to see if item count is valid for amount of categories
