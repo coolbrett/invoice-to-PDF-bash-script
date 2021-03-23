@@ -1,0 +1,135 @@
+*******************************************************************************
+Test File for project 2. This file hold the test that we preformed on 
+create.sh and valid.sh.
+
+AUTHOR: Carlee Yancey
+AUTHOR: Brett Dale
+VERSION: 1 (24, March, 2021)
+*******************************************************************************
+
+**************************START OF TEST CHECK.SH*******************************
+
+TEST 1: Correct information for a Instate file.
+
+>bash create.sh -i correctInstate
+>Please enter customer name > Jane Doe
+>Please enter street address > 123 Sunshine Lane
+>Please enter city > Holden Beach 
+>Please enter the fields that comprise the order > Hat Shirt Shoes
+>Please enter the number "Hat" items you want to purchase > 2
+>Please enter the number "Shirt" items you want to purchase > 1
+>Please enter the number "Shoes" items you want to purchase > 5
+>calling vaild with correctInstate.iso
+>
+>"correctInstate.iso" has been create for
+>customer:Jane Doe
+>address:123 Sunshine Lane, Holden Beach, NC
+
+
+TEST 2: Correct Out of State
+
+>bash create.sh -o correctOutstate
+>Please enter customer name > John Doe
+>Please enter street address > 123 Coal Mine St
+>Please enter city > Hinton
+>Please enter state > WV
+>Please enter the fields that comprise the order > Hat Hammer Boots
+>Please enter the number "Hat" items you want to purchase > 1
+>Please enter the number "Hammer" items you want to purchase > 4
+>Please enter the number "Boots" items you want to purchase > 2
+>calling vaild with correctOutstate.oso
+>
+>"correctOutstate.oso" has been create for
+>customer:John Doe
+>address:123 Coal Mine St, Hinton, WV
+
+TEST 3: Incorrect argument, missing file name
+
+>bash create.sh -i
+>Usage: create.sh -i|-o filename
+
+TEST 4: Incorrect arguments, missing -i|-o
+
+>bash create.sh filename
+>Usage: create.sh -i|-o filename
+
+TEST 5: Incorrect arguments, used -t instead of -i|-o
+
+>bash create.sh -t filename
+>Usage: create.sh -i|-o filename
+
+TEST 6: State abb. longer than two
+
+>bash create.sh -o length
+>Please enter customer name > John Doe
+>Please enter street address > 123 Coal Mine St
+>Please enter city > Hinton
+>Please enter state > WV
+>ERROR: West is not the correct length for a state abbervation: (4)
+
+TEST 7: Did not enter a category at first
+
+>bash create.sh -i correctInstate
+>Please enter customer name > Jane Doe
+>Please enter street address > 123 Sunshine Lane
+>Please enter city > Holden Beach 
+>Please enter the fields that comprise the order > 
+>Please enter the fields that comprise the order > 
+>Please enter the fields that comprise the order > Hat Shirt Shoes
+>Please enter the number "Hat" items you want to purchase > 2
+>Please enter the number "Shirt" items you want to purchase > 1
+>Please enter the number "Shoes" items you want to purchase > 5
+>calling vaild with correctInstate.iso
+>
+>"correctInstate.iso" has been create for
+>customer:Jane Doe
+>address:123 Sunshine Lane, Holden Beach, NC
+
+TEST 8: Already create instate file
+
+>bash create.sh -i correctInstate
+>ERROR: correctInstate.iso already exist
+
+TEST 9: ALready create out of state file
+
+>bash create.sh -o correctOutstate
+>ERROR: correctOutstate already exist
+
+TEST 10: Has create file called checkFile.iso, and trys it with out of state
+
+>bash create.sh -o checkFile
+>Please enter customer name > John Doe
+>Please enter street address > 123 Coal Mine St
+>Please enter city > Hinton
+>Please enter state > WV
+>Please enter the fields that comprise the order > Hat Hammer Boots
+>Please enter the number "Hat" items you want to purchase > 1
+>Please enter the number "Hammer" items you want to purchase > 4
+>Please enter the number "Boots" items you want to purchase > 2
+>calling vaild with checkFile.oso
+>
+>"checkFile.oso" has been create for
+>customer:John Doe
+>address:123 Coal Mine St, Hinton, WV
+
+TEST 11: The opposite of TEST 10 but with alreay create outFile.oso
+
+>bash create.sh -i outFile
+>Please enter customer name > Jane Doe
+>Please enter street address > 123 Sunshine Lane
+>Please enter city > Holden Beach 
+>Please enter the fields that comprise the order > Hat Shirt Shoes
+>Please enter the number "Hat" items you want to purchase > 2
+>Please enter the number "Shirt" items you want to purchase > 1
+>Please enter the number "Shoes" items you want to purchase > 5
+>calling vaild with outFile.iso
+>
+>"outFile.iso" has been create for
+>customer:Jane Doe
+>address:123 Sunshine Lane, Holden Beach, NC
+
+
+****************************END OF TEST CHECK.SH*******************************
+
+
+**************************START OF TEST VALID.SH*******************************

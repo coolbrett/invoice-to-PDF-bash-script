@@ -13,6 +13,7 @@
 #   exit 1: usage error dealing with args
 #   exit 2: file name already exist 
 #   exit 3: Length of state is not 2
+#   exit 4: Created file not valid
 #
 
 #checks the number of args
@@ -37,11 +38,11 @@ else #has correct number of args, checks what the args are
     then
         echo "Usage: create.sh -i|-o filename"
         exit 1
-    elif [ "$1" = "-o" ]
+    elif [ "$1" = "-o" ] #If out of State
     then 
         state=""
         filename="$file.oso"
-    elif [ "$1" = "-i" ]
+    elif [ "$1" = "-i" ] #If in state
     then
         state="NC"
         filename="$file.iso"
@@ -85,29 +86,28 @@ do
     echo -n "Please enter the fields that comprise the order > " 
     read categories
 done
-#TODO handle getting each category
 
-clength=$(echo $categories | wc -w)
+clength=$(echo $categories | wc -w) #Gets the word count of categories
 
 #Asking for the number of items for the categories
 numbers=""
 category=""
 index=0
-while [ $clength -gt $index ]
+while [ $clength -gt $index ] 
 do 
     val=$(echo $categories | cut -d" " -f$(($index+1)))
     echo -n "Please enter the number of \""$val"\" items you want to purchase > "
     read num
-    if [ "$numbers" = "" ]
+    if [ "$numbers" = "" ] #if first item
     then
         numbers=$num
-    else
+    else #If more than one Item
         numbers="$numbers,$num"  
     fi
-    if [ "$category" = "" ]
+    if [ "$category" = "" ] #If first category
     then
         category=$val
-    else
+    else #If more than one category
         category="$category, $val"
     fi
     ((index++))
@@ -118,23 +118,27 @@ touch $filename
 echo "customer:"$name >> $filename
 echo "address:"$street", "$city", "$state >> $filename
 echo "categories:"$category >> $filename
-#TODO categories
 echo "items:" $numbers >> $filename
 
-exit 0
 
 #check to see if valid 
 echo "calling valid with " $filename
+echo ""
 bash valid.sh $filename
 
 status=$? #exit status of vaild
-if [ $status -e 0 ]
+
+#What to based on if the created file is valid
+if [ $status -eq 0 ] 
 then
-    echo $filename "has been created for "
-    #TODO print the first two lines of the created file
+    #Prints that the file is vaild and the first two lines of the created file
+    echo "\""$filename"\"" "has been created for "
+    head -n 2 $filename
 else
-    #TODO handle deleteing the file
+    #Removes the file, since the file was not valid
     rm $filename
+    echo "ERROR:" $filename "not valid"
+    exit 4
 fi
 exit 0
 
