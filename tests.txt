@@ -19,7 +19,7 @@ TEST 1: Correct information for a Instate file.
 >Please enter the number "Hat" items you want to purchase > 2
 >Please enter the number "Shirt" items you want to purchase > 1
 >Please enter the number "Shoes" items you want to purchase > 5
->calling vaild with correctInstate.iso
+>calling valid with correctInstate.iso
 >
 >"correctInstate.iso" has been create for
 >customer:Jane Doe
@@ -37,7 +37,7 @@ TEST 2: Correct Out of State
 >Please enter the number "Hat" items you want to purchase > 1
 >Please enter the number "Hammer" items you want to purchase > 4
 >Please enter the number "Boots" items you want to purchase > 2
->calling vaild with correctOutstate.oso
+>calling valid with correctOutstate.oso
 >
 >"correctOutstate.oso" has been create for
 >customer:John Doe
@@ -65,7 +65,7 @@ TEST 6: State abb. longer than two
 >Please enter street address > 123 Coal Mine St
 >Please enter city > Hinton
 >Please enter state > WV
->ERROR: West is not the correct length for a state abbervation: (4)
+>ERROR: West is not the correct length for a state abbreviation: (4)
 
 TEST 7: Did not enter a category at first
 
@@ -90,7 +90,7 @@ TEST 8: Already create instate file
 >bash create.sh -i correctInstate
 >ERROR: correctInstate.iso already exist
 
-TEST 9: ALready create out of state file
+TEST 9: Already create out of state file
 
 >bash create.sh -o correctOutstate
 >ERROR: correctOutstate already exist
@@ -106,13 +106,13 @@ TEST 10: Has create file called checkFile.iso, and trys it with out of state
 >Please enter the number "Hat" items you want to purchase > 1
 >Please enter the number "Hammer" items you want to purchase > 4
 >Please enter the number "Boots" items you want to purchase > 2
->calling vaild with checkFile.oso
+>calling valid with checkFile.oso
 >
 >"checkFile.oso" has been create for
 >customer:John Doe
 >address:123 Coal Mine St, Hinton, WV
 
-TEST 11: The opposite of TEST 10 but with alreay create outFile.oso
+TEST 11: The opposite of TEST 10 but with already create outFile.oso
 
 >bash create.sh -i outFile
 >Please enter customer name > Jane Doe
@@ -133,3 +133,36 @@ TEST 11: The opposite of TEST 10 but with alreay create outFile.oso
 
 
 **************************START OF TEST VALID.SH*******************************
+
+NOTE: These tests are where we run "valid.sh" on it's own and not alongside "create.sh"
+
+TEST 1: Correct .iso file given
+
+> ./valid.sh shopping.iso
+> exit code 0 (successful)
+
+TEST 2: Correct .oso file given
+
+> ./valid.sh shopping.oso
+> exit code 0 (successful)
+
+TEST 3: Passing in file that does not exist
+
+> ./valid.sh air.iso
+> ERROR: air.iso is not accessible
+
+TEST 4: Passing in file with missing header line
+
+> ./valid.sh missingHeader.iso
+> ERROR: Missing header line
+> Last header line: categories:candy, shoes, bookbag
+
+TEST 5: Passing file with invalid item quantities
+
+> ./valid.sh items.oso
+> ERROR: invalid item quantities: 2 categories but 1 items
+
+TEST 6: Passing file with broken file extension
+
+> ./valid.sh broken.osi
+> ERROR: ".osi" is not a valid file extension
