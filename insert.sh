@@ -96,11 +96,27 @@ then
         do
             echo -n "Please enter the name of the "$categoryInsert" item > "
             read itemName
-            echo -n "Please enter a price per unit of "$categoryInsert" > "
-            read price
-            echo -n "Pleae enter the amount of "$categoryInsert" units to purchase > "   
-            read amount
+                       
+            correctPrice=0
+            correctAmount=0
+            while [ $correctPrice -eq 0 ]
+            do
+                echo -n "Please enter a price per unit of "$itemName" > "
+                read price
+                if [[ $price =~ ^[0-9]+([.][0-9]*)?$ ]]; then #Making sure that price is integer or float     
+                    correctPrice=1
+                fi
+            done
             
+            while [ $correctAmount -eq 0 ]
+            do
+                echo -n "Pleae enter the amount of "$itemName" units to purchase > "   
+                read amount
+                if [[ $amount =~ ^[0-9]+([.][0-9]*)?$ ]]; then #Making sure that price is integer or float     
+                    correctAmount=1
+                fi
+            done
+
             lowerCat=$(echo $categoryInsert | tr '[:upper:]' '[:lower:]')
             echo $lowerCat": "$itemName", "$price", "$amount >> $filename
             echo ""
@@ -129,11 +145,27 @@ else
             do
                 echo -n "Please enter the name of the "$category" item > "
                 read itemName
-                echo -n "Please enter a price per unit of "$category" > "
-                read price
-                echo -n "Pleae enter the amount of "$category" units to purchase > "   
-                read amount
+                
+                correctPrice=0
+                correctAmount=0
+                while [ $correctPrice -eq 0 ]
+                do
+                    echo -n "Please enter a price per unit of "$itemName" > "
+                    read price
+                    if [[ $price =~ ^[0-9]+([.][0-9]*)?$ ]]; then #Making sure that price is integer or float     
+                        correctPrice=1
+                    fi
+                done
             
+                while [ $correctAmount -eq 0 ]
+                do
+                    echo -n "Pleae enter the amount of "$itemName" units to purchase > "   
+                    read amount
+                    if [[ $amount =~ ^[0-9]+([.][0-9]*)?$ ]]; then #Making sure that price is integer or float     
+                        correctAmount=1
+                    fi
+                done
+
                 lowerCat=$(echo $category | tr '[:upper:]' '[:lower:]')
                 echo $lowerCat": "$itemName", "$price", "$amount >> $filename
                 echo ""

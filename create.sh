@@ -108,7 +108,7 @@ do
     then
         category=$val
     else #If more than one category
-        category="$category, $val"
+        category="$category,$val"
     fi
     ((index++))
 done
@@ -118,7 +118,7 @@ touch $filename
 echo "customer:"$name >> $filename
 echo "address:"$street", "$city", "$state >> $filename
 echo "categories:"$category >> $filename
-echo "items:" $numbers >> $filename
+echo "items:"$numbers >> $filename
 
 
 #check to see if valid 
