@@ -66,7 +66,8 @@ items=0
 for character in $line
 do
     ((count++))
-    items=$(expr $items + "$character")
+    #items=$(expr $items + "$character")
+    items=$((items + character))
 done
 IFS=$Field_Separator
 
