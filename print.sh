@@ -34,18 +34,19 @@ echo "File is valid"
 filename="tmp.tex"
 touch $filename
 > $filename
+
 #Adding the basics of a LaTeX file
 echo "\begin{table}[ht]
 \caption{Nonlinear Model Results} % title of Table
 \centering % used for centering table
 \begin{tabular}{c c c c} % centered columns (4 columns)
-\hline\hline %inserts double horizontal lines
-Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
+\hline %inserts single horizontal line
+Category & Item & Cost & Quantity & Total \\ [0.5ex] % inserts table
 %heading
-\hline % inserts single horizontal line
+\hline\hline % inserts double horizontal line
 
 \hline %inserts single line
 \end{tabular}
-\label{table:nonlin} % is used to refer this table in the text
+\label{tab:nonlin} % is used to refer this table in the text
 \end{table}" >> $filename
 

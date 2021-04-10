@@ -58,7 +58,9 @@ fi
 #Checking to see if item count is valid for amount of categories
 
 #counting commas in items to get number of categories
+echo "$(grep "^items:" $filename)"
 line=$(awk 'END{print substr($0, 8)}' "$filename")
+echo "$line"
 Field_Separator=$IFS
 IFS=,
 count=0
@@ -70,6 +72,8 @@ do
     items=$((items + character))
 done
 IFS=$Field_Separator
+echo "count is: $count"
+echo "items: $items"
 
 if [ "$count" -gt "$items" ]; then
     echo "ERROR: invalid item quantities: $count categories but $items items"
