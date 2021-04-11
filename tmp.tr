@@ -8,15 +8,17 @@ c c c c c
 c r c r c .
 / /Brett Dale/ /
 / /35 Dix Gap, Cullowhee, NC/ /
+.sp .1v
+_
+.sp .1v
 Category/Item/Cost/Quantity/Total
 .sp .1v
 =
 .sp .1v
-# Data
 candy/twizzler/2/3/6
 candy/skittles/1/2/2
 shoes/nikes/60/1/60
 tires/Bridgestone/240/4/960
 tires/Michelin/300/4/1200
-tires/Firestone/110/4/440
+tires/Fire stone/110/4/440
 .TE

@@ -51,11 +51,13 @@ c c c c c
 c r c r c .
 / /$name/ /
 / /$address/ /
+.sp .1v
+_
+.sp .1v
 Category/Item/Cost/Quantity/Total
 .sp .1v
 =
-.sp .1v
-# Data" >> $filename
+.sp .1v" >> $filename
 
 #Get our data from invoice
 categories=$(awk -F: '$1=="categories"{print $2}'  "$invoice")
@@ -71,11 +73,12 @@ while [ "$clength" -gt $index ]; do
     echo "$data" |
     while IFS= read -r line ;
     do
-      temp=$(echo $line | tr -d ' ')
+      #temp=$(echo $line | tr -d ' ')
+      temp=$line
       echo "line is: $temp"
-      product=$(echo "$temp" | cut -d "," -f 1)
-      price=$(echo "$temp" | cut -d "," -f 2)
-      quantity=$(echo "$temp" | cut -d "," -f 3)
+      product=$(echo "$temp" | cut -d "," -f 1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      price=$(echo "$temp" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      quantity=$(echo "$temp" | cut -d "," -f 3 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       total=$((price * quantity))
       echo "product: $product"
       echo "price: $price"
