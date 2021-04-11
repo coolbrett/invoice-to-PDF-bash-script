@@ -14,7 +14,6 @@
 
 
 #Checking command line arg count
-echo  "arg count: $#"
 if [[ $# -gt 2 ]] || [[ $# -lt 1 ]]; then
     echo "usage: print.sh <invoice filename> [-c]"
     exit 1
@@ -27,26 +26,68 @@ if [[ $# -eq 2 ]] && [[ $1 != "-c" ]]; then
 fi
 
 #Running to make sure file is valid
-bash valid.sh "$1"
-echo "File is valid"
+invoice="$1"
+bash valid.sh "$invoice"
 
-#Now we turn create our LaTeX file
-filename="tmp.tex"
+#Now we turn create our groff file
+filename="tmp.tr"
 touch $filename
 > $filename
 
-#Adding the basics of a LaTeX file
-echo "\begin{table}[ht]
-\caption{Nonlinear Model Results} % title of Table
-\centering % used for centering table
-\begin{tabular}{c c c c} % centered columns (4 columns)
-\hline %inserts single horizontal line
-Category & Item & Cost & Quantity & Total \\ [0.5ex] % inserts table
-%heading
-\hline\hline % inserts double horizontal line
+#Adding the basics of a groff
+echo ".sp 10
+.ps 14
+.vs 16
+.TS
+center, box, expand, nowarn, tab(/);" >> $filename
 
-\hline %inserts single line
-\end{tabular}
-\label{tab:nonlin} % is used to refer this table in the text
-\end{table}" >> $filename
+#Grab name and address here
+name=$(awk -F: '$1=="customer"{print $2}' "$invoice")
+address=$(awk -F: '$1=="address"{print $2}' "$invoice")
+
+#Table formatting w/ name and address added in
+echo "c c c c c
+c c c c c
+c r c r c .
+/ /$name/ /
+/ /$address/ /
+Category/Item/Cost/Quantity/Total
+.sp .1v
+=
+.sp .1v
+# Data" >> $filename
+
+#Get our data from invoice
+categories=$(awk -F: '$1=="categories"{print $2}'  "$invoice")
+clength=$(echo "$categories" | awk -F, '{print NF}')
+index=0
+while [ "$clength" -gt $index ]; do
+    #get single category, then find lines with items matching category
+    category=$(echo "$categories" | cut -d, -f$(($index+1)))
+    #elimates leading and trailing whitespace, some categories were coming out as " category"
+    category="$(echo -e "${category}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    data=$(grep "^$category:.*" "$invoice" | sed 's/^.*: //')
+    #Below is using our lines retrieved from grep and iterating through them
+    echo "$data" |
+    while IFS= read -r line ;
+    do
+      temp=$(echo $line | tr -d ' ')
+      echo "line is: $temp"
+      product=$(echo "$temp" | cut -d "," -f 1)
+      price=$(echo "$temp" | cut -d "," -f 2)
+      quantity=$(echo "$temp" | cut -d "," -f 3)
+      total=$((price * quantity))
+      echo "product: $product"
+      echo "price: $price"
+      echo "quantity: $quantity"
+      echo "total: $total"
+      echo "--"
+      #here we write to the groff file
+      echo "$category/$product/$price/$quantity/$total" >> $filename
+    done
+    #echo "$data" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+    ((index++))
+done
+echo ".TE" >> $filename
+
 
