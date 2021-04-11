@@ -33,7 +33,6 @@ bash valid.sh "$invoice"
 filename="tmp.tr"
 touch $filename
 > $filename
-
 #Adding the basics of a groff
 echo ".sp 10
 .ps 14
@@ -77,9 +76,9 @@ while [ "$clength" -gt $index ]; do
       temp=$line
       echo "line is: $temp"
       product=$(echo "$temp" | cut -d "," -f 1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-      price=$(echo "$temp" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      price=$(echo "$temp" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | awk '{printf "%.2f\n", $1}')
       quantity=$(echo "$temp" | cut -d "," -f 3 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-      total=$((price * quantity))
+      total=$(awk -v price="$price" -v quantity="$quantity" 'BEGIN{total=(price*quantity); printf("%.2f", total)}')
       echo "product: $product"
       echo "price: $price"
       echo "quantity: $quantity"

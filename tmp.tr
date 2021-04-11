@@ -15,10 +15,10 @@ Category/Item/Cost/Quantity/Total
 .sp .1v
 =
 .sp .1v
-candy/twizzler/2/3/6
-candy/skittles/1/2/2
-shoes/nikes/60/1/60
-tires/Bridgestone/240/4/960
-tires/Michelin/300/4/1200
-tires/Fire stone/110/4/440
+candy/twizzler/2.00/3/6.00
+candy/skittles/1.00/2/2.00
+shoes/nikes/60.00/1/60.00
+tires/Bridgestone/240.00/4/960.00
+tires/Michelin/300.00/4/1200.00
+tires/Fire stone/110.00/4/440.00
 .TE
