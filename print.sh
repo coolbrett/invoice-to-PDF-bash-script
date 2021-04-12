@@ -11,6 +11,7 @@
 #   exit 1: usage errors, command line args error related
 #   exit 2: File passed is not readable
 #   exit 3: File passed does not have correct extensions
+#   exit 4: File did not pass valid.sh check
 
 
 #Checking command line arg count
@@ -28,6 +29,11 @@ fi
 #Running to make sure file is valid
 invoice="$1"
 bash valid.sh "$invoice"
+status=$?
+if [ $status -ne 0 ]; then
+    echo "$invoice is not a valid invoice"
+    exit 4
+fi
 
 #Now we turn create our groff file
 filename="tmp.tr"
