@@ -38,44 +38,43 @@ if [ "$extension" != "iso" ] && [ "$extension" != "oso" ]; then
 fi
 
 #Checking for missing headers, statement below ignores empty lines and lines that have only spaces/tabs in file
-count=$(sed '/^[[:blank:]]*$/d' "$filename" | wc -l)
+category_count=$(sed '/^[[:blank:]]*$/d' "$filename" | wc -l)
 
-if [ "$count" -lt 4 ]; then
+if [ "$category_count" -lt 4 ]; then
     echo "ERROR: Missing header line"
-    echo "Last header line: $(awk -v line="$count" '{if(NR==line) print $0}' "$filename")"
+    #HERE
+    #echo "Last header line: $(awk -v line="$count" '{if(NR==line) print $0}' "$filename")"
+    echo "Last header line: $(awk '/./{line=$0} END{print line}' "$filename")"
     exit 5
 fi
 
 #Checking for NC as state in .iso files
 if [ "$extension" == "iso" ]; then
-    state="$(awk 'NR==2 {print substr($0, length($0)-1)}' "$filename")"
+    #HERE
+    #state="$(awk 'NR==2 {print substr($0, length($0)-1)}' "$filename")"
+    state=$(grep "^address:.*" "$filename" | sed 's/^.*: //' | awk '{print substr($0, length($0)-1)}')
     if [ "$state" != "NC" ]; then
         echo "ERROR: State in .iso invoice is not NC --> State found was: $state"
         exit 6
     fi
 fi
 
+#NEW CHECK
+#Checking oso file to see if state is NC
+if [ "$extension" == "oso" ]; then
+    state=$(grep "^address:.*" "$filename" | sed 's/^.*: //' | awk '{print substr($0, length($0)-1)}')
+    if [ "$state" == "NC" ]; then
+        echo "ERROR: State in .oso invoice is NC"
+    fi
+fi
+
 #Checking to see if item count is valid for amount of categories
+#HERE
 
-#counting commas in items to get number of categories
-# echo "$(grep "^items:" $filename)"
-line=$(awk 'END{print substr($0, 8)}' "$filename")
-#echo "$line"
-Field_Separator=$IFS
-IFS=,
-count=0
-items=0
-for character in $line
-do
-    ((count++))
-    #items=$(expr $items + "$character")
-    items=$((items + character))
-done
-IFS=$Field_Separator
-# echo "count is: $count"
-# echo "items: $items"
+category_count=$(($(grep -oP '(?<=categories:).*' "$filename" | tr -cd , | wc -c) + 1))
+items=$(($(grep -oP '(?<=items:).*' "$filename" | tr -cd , | wc -c) + 1))
 
-if [ "$count" -gt "$items" ]; then
-    echo "ERROR: invalid item quantities: $count categories but $items items"
+if [ "$category_count" -ne "$items" ]; then
+    echo "ERROR: invalid item quantities: $category_count categories but $items items"
     exit 7
 fi

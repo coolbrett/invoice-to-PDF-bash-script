@@ -79,16 +79,10 @@ while [ "$clength" -gt $index ]; do
     do
       #temp=$(echo $line | tr -d ' ')
       temp=$line
-      echo "line is: $temp"
       product=$(echo "$temp" | cut -d "," -f 1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       price=$(echo "$temp" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | awk '{printf "%.2f\n", $1}')
       quantity=$(echo "$temp" | cut -d "," -f 3 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       total=$(awk -v price="$price" -v quantity="$quantity" 'BEGIN{total=(price*quantity); printf("%.2f", total)}')
-      echo "product: $product"
-      echo "price: $price"
-      echo "quantity: $quantity"
-      echo "total: $total"
-      echo "--"
       #here we write to the groff file
       echo "$category/$product/$price/$quantity/$total" >> $datafile
     done
@@ -107,6 +101,11 @@ if [ "$2" == "-c" ]; then
       cat $datafile >> $filename
       rm $datafile
 fi
+#finishing groff file
 echo ".TE" >> $filename
+
+#compiling groff file into ps file to display
 tbl tmp.tr | groff > tmp.ps
 rm tmp.tr
+okular tmp.ps
+rm tmp.ps
