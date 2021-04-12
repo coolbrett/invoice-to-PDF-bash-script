@@ -15,6 +15,7 @@
 #   exit 5: Missing headers
 #   exit 6: NC isn't state in .iso file
 #   exit 7: More categories than items
+#   exit 8: Categories field is a number
 
 #first step is to check argument count
 filename=$1
@@ -78,3 +79,18 @@ if [ "$category_count" -ne "$items" ]; then
     echo "ERROR: invalid item quantities: $category_count categories but $items items"
     exit 7
 fi
+
+#Checking if any categories are numbers
+temp=$(grep -oP '(?<=categories:).*' "$filename")
+check=$(echo "$temp" | tr -d ' ')
+IFS=','
+read -a arr <<< "$check"
+#This regex handles numbers with decimals and signs in front
+numbers='^[+-]?[0-9]+([.][0-9]+)?$'
+for val in "${arr[@]}";
+do
+  if [[ $val =~ $numbers ]]; then
+      echo "ERROR: Categories can not be numbers"
+      exit 8
+  fi
+done
