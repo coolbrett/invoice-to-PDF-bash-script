@@ -109,3 +109,4 @@ tbl tmp.tr | groff > tmp.ps
 rm tmp.tr
 okular tmp.ps
 rm tmp.ps
+exit 0
