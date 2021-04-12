@@ -1,168 +1,291 @@
 *******************************************************************************
-Test File for project 2. This file hold the test that we preformed on 
-create.sh and valid.sh.
+Test file for project 3. This file holds the test that we preformed on insert.sh
+and print.sh
 
 AUTHOR: Carlee Yancey
 AUTHOR: Brett Dale
-VERSION: 1 (24, March, 2021)
+VERSION 1 (12 April, 2021)
 *******************************************************************************
 
-**************************START OF TEST CHECK.SH*******************************
+***************************Start of TEST INSERT.S******************************
 
-TEST 1: Correct information for a Instate file.
+The inovice that is being user for TEST 2,3,3b
+testInvoice3.oso
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
 
->bash create.sh -i correctInstate
->Please enter customer name > Jane Doe
->Please enter street address > 123 Sunshine Lane
->Please enter city > Holden Beach 
->Please enter the fields that comprise the order > Hat Shirt Shoes
->Please enter the number "Hat" items you want to purchase > 2
->Please enter the number "Shirt" items you want to purchase > 1
->Please enter the number "Shoes" items you want to purchase > 5
->calling valid with correctInstate.iso
+categories:Produce,Services,Homewares,Toiltries
+items:3,1,2,1
+
+produce: apples, 54, 5
+produce oranges, 1.10, 9
+services: window washing, 25.99, 9
+toiletries: shaving cream, 1.45, 3
+
+-------------------------------------------------------------------------------
+
+TEST 1: Not including any arguments
+
+>bash insert.sh
+>Usage: insert.sh <filename> [optional: <category>]
+
+TEST 2: To many arguments
+
+>bash insert.sh testInvoice3.oso
+>Usage: insert.sh <filename> [optional: <category>]
+
+TEST 3: Not giving it a category to insert
+
+>bash insert.sh testInvoice3.oso
+>Please enter the name of the Produce item > carrot
+>Please enter a price pre unit of carrot > .45
+>Please enter the amount of carrot units to purchase > 6
 >
->"correctInstate.iso" has been create for
->customer:Jane Doe
->address:123 Sunshine Lane, Holden Beach, NC
-
-
-TEST 2: Correct Out of State
-
->bash create.sh -o correctOutstate
->Please enter customer name > John Doe
->Please enter street address > 123 Coal Mine St
->Please enter city > Hinton
->Please enter state > WV
->Please enter the fields that comprise the order > Hat Hammer Boots
->Please enter the number "Hat" items you want to purchase > 1
->Please enter the number "Hammer" items you want to purchase > 4
->Please enter the number "Boots" items you want to purchase > 2
->calling valid with correctOutstate.oso
+>Please enter the name of the Homewares item > wash cloths
+>Please enter a price pre unit of wash cloths > .99
+>Please enter the amount of wash cloths units to purchase > 15
 >
->"correctOutstate.oso" has been create for
->customer:John Doe
->address:123 Coal Mine St, Hinton, WV
-
-TEST 3: Incorrect argument, missing file name
-
->bash create.sh -i
->Usage: create.sh -i|-o filename
-
-TEST 4: Incorrect arguments, missing -i|-o
-
->bash create.sh filename
->Usage: create.sh -i|-o filename
-
-TEST 5: Incorrect arguments, used -t instead of -i|-o
-
->bash create.sh -t filename
->Usage: create.sh -i|-o filename
-
-TEST 6: State abb. longer than two
-
->bash create.sh -o length
->Please enter customer name > John Doe
->Please enter street address > 123 Coal Mine St
->Please enter city > Hinton
->Please enter state > WV
->ERROR: West is not the correct length for a state abbreviation: (4)
-
-TEST 7: Did not enter a category at first
-
->bash create.sh -i correctInstate
->Please enter customer name > Jane Doe
->Please enter street address > 123 Sunshine Lane
->Please enter city > Holden Beach 
->Please enter the fields that comprise the order > 
->Please enter the fields that comprise the order > 
->Please enter the fields that comprise the order > Hat Shirt Shoes
->Please enter the number "Hat" items you want to purchase > 2
->Please enter the number "Shirt" items you want to purchase > 1
->Please enter the number "Shoes" items you want to purchase > 5
->calling vaild with correctInstate.iso
+>Please enter the name of the Homewares item > bathroom mat
+>Please enter a price pre unit of bathroom mat > 5.00
+>Please enter the amount of bathroom mat units to purchase > 2
 >
->"correctInstate.iso" has been create for
->customer:Jane Doe
->address:123 Sunshine Lane, Holden Beach, NC
+>3 records add to testInvoice3.oso
 
-TEST 8: Already create instate file
+TEST 3b: Same call as test 3, but every category is full
 
->bash create.sh -i correctInstate
->ERROR: correctInstate.iso already exist
+>bash insert.sh testInvoice3.oso
+>0 records added to testInvoice3.oso invoice
 
-TEST 9: Already create out of state file
+testInvoice3.oso after test 3,3b
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
 
->bash create.sh -o correctOutstate
->ERROR: correctOutstate already exist
+categories:Produce,Services,Homewares,Toiltries
+items:3,1,2,1
 
-TEST 10: Has create file called checkFile.iso, and trys it with out of state
+produce: apples, 54, 5
+produce oranges, 1.10, 9
+services: window washing, 25.99, 9
+toiletries: shaving cream, 1.45, 3
 
->bash create.sh -o checkFile
->Please enter customer name > John Doe
->Please enter street address > 123 Coal Mine St
->Please enter city > Hinton
->Please enter state > WV
->Please enter the fields that comprise the order > Hat Hammer Boots
->Please enter the number "Hat" items you want to purchase > 1
->Please enter the number "Hammer" items you want to purchase > 4
->Please enter the number "Boots" items you want to purchase > 2
->calling valid with checkFile.oso
+produce: carrot, .45, 6
+homewares: wash cothes, .99, 15
+homewares: bathroom mat, 5.00, 2
+-------------------------------------------------------------------------------
+
+below file used to test: 4,5,6,7
+testInvoice4.oso
+------------------------------------------------------------------------------- 
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+
+categories:Produce,Services,Homewares,Toiltries
+items:3,1,2,1
+
+produce: apples, 54, 5
+produce oranges, 1.10, 9
+services: window washing, 25.99, 9
+toiletries: shaving cream, 1.45, 3
+-------------------------------------------------------------------------------
+TEST 4: Insert a category that does not exist
+
+>bash insert.oso testInvoice4.oso hats
+>hats is not a valid category for this invoice
+
+TEST 5: Insert produce
+
+>bash insert.oso testInvoice4.oso produce
+>Please enter the name of the Produce item > corn
+>Please enter a price pre unit of corn > .99
+>Please enter the amount of corn units to purchase > 12
 >
->"checkFile.oso" has been create for
->customer:John Doe
->address:123 Coal Mine St, Hinton, WV
+>1 record added to testInvoice4.oso
 
-TEST 11: The opposite of TEST 10 but with already create outFile.oso
+TEST 6: Insert homewares (missing 2 items)
 
->bash create.sh -i outFile
->Please enter customer name > Jane Doe
->Please enter street address > 123 Sunshine Lane
->Please enter city > Holden Beach 
->Please enter the fields that comprise the order > Hat Shirt Shoes
->Please enter the number "Hat" items you want to purchase > 2
->Please enter the number "Shirt" items you want to purchase > 1
->Please enter the number "Shoes" items you want to purchase > 5
->calling vaild with outFile.iso
+>bash insert.sh testInvoice4.oso homewares
+>Please enter the name of the Homewares item > door mat
+>Please enter a price pre unit of door mat > 15.00
+>Please enter the amount of door mat units to purchase > 2
 >
->"outFile.iso" has been create for
->customer:Jane Doe
->address:123 Sunshine Lane, Holden Beach, NC
+>Please enter the name of the Homewares item > pricture frame
+>Please enter a price pre unit of pricture frame > 3.00
+>Please enter the amount of picture frame units to purchase > 5
+>
+>2 records added to testInvoice4.oso
+
+TEST 7: Insert produce that already has every item
+
+>bash insert.sh testInvoice4.oso produce
+>0 records added to testInovice4.oso
+
+testInovice4.oso after the test of 
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+categories:Produce,Services,Homewares,Toiltries
+items:3,1,2,1
+
+produce: apples, 54, 5
+produce: oranges, 1.10, 9
+services: window washing, 25.99, 9
+toiletries: shaving cream, 1.45, 3
+
+produce: corn, .99, 12
+homeware: door mat, 15.00, 2
+homeware: picture frame, 3.00, 5
+-------------------------------------------------------------------------------
+
+the file below is for test 8 
+checkNuber2.oso
+------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+categories:Produce,Services
+items:3,2
+
+produce: apples, 54, 5
+produce: oranges, 1.10, 9
+services: window washing, 25.99, 9
+-------------------------------------------------------------------------------
+
+TEST 8: If uesr enters a non-number amount and price, with category given
+
+>bash insert.sh checkNuber2.oso produce
+>Please enter the name of the Produce item > carrot
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > 7
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > 6
+>
+>Please enter the name of the Produce item > corn
+>Please enter a price pre unit of corn > 6
+>Please enter the amount of corn units to purchase > 5
+>
+>2 records added to checkingNuber2.oso
+
+checkingNuber2.oso after the test of 8
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+categories:Produce,Services
+items:4,2
+
+produce: apples, 54, 5
+produce: oranges, 1.10, 9
+services: window washing, 25.99, 9
+
+produce: carrot, 7, 6
+prodouce: corn, 6, 5
+-------------------------------------------------------------------------------
+
+the file below is for test 9
+checkNumber3.oso
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+categories:Produce,Services
+items:3,2
+
+produce: apples, 54, 5
+produce: oranges, 1.10, 9
+services: window washing, 25.99, 9
+
+-------------------------------------------------------------------------------
+
+TEST 9: If user enters a non-number for price and amount, with no given category
+
+>bash insert.sh checkNuber2.oso produce
+>Please enter the name of the Produce item > carrot
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > t
+>Please enter a price pre unit of carrot > 7
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > a
+>Please enter the amount of carrot units to purchase > 6
+>
+>Please enter the name of the Serivces item > corn
+>Please enter a price pre unit of house cleaning > 5
+>Please enter the amount of house cleaning units to purchase > 1
+>
+>2 records added to checkingNumber3.oso
 
 
-****************************END OF TEST CHECK.SH*******************************
+checkingNumber3.oso after test 9
+-------------------------------------------------------------------------------
+customer:Paul Johnson
+address:546 Broadway, New York, NY
+categories:Produce,Services
+items:3,2
+
+produce: apples, 54, 5
+produce: oranges, 1.10, 9
+services: window washing, 25.99, 9
+produce: carrot, 7, 6
+services: house cleaning, 5, 1
+-------------------------------------------------------------------------------
 
 
-**************************START OF TEST VALID.SH*******************************
+***************************END of TEST INSERT.SH*******************************
 
-NOTE: These tests are where we run "valid.sh" on it's own and not alongside "create.sh"
 
-TEST 1: Correct .iso file given
+***************************Start of TEST PRINT.SH******************************
 
-> ./valid.sh shopping.iso
-> exit code 0 (successful)
+TEST 1: Giving print.sh no arguments
 
-TEST 2: Correct .oso file given
+> ./print.sh
+> usage: print.sh <invoice filename> [-c]
 
-> ./valid.sh shopping.oso
-> exit code 0 (successful)
 
-TEST 3: Passing in file that does not exist
+TEST 2: Too many arguments
+> ./print.sh shopping.iso -c oops
+> usage: print.sh <invoice filename> [-c]
 
-> ./valid.sh air.iso
-> ERROR: air.iso is not accessible
 
-TEST 4: Passing in file with missing header line
+TEST 3: Giving an incorrect flag
+> ./print.sh shopping.iso -a
+> usage: print.sh <invoice filename> [-c]
 
-> ./valid.sh missingHeader.iso
-> ERROR: Missing header line
-> Last header line: categories:candy, shoes, bookbag
 
-TEST 5: Passing file with invalid item quantities
+TEST 4: Only giving a flag with no invoice file
+> ./print.sh -c
+> ERROR: -c is not accessible
+  -c is not a valid invoice
 
-> ./valid.sh items.oso
-> ERROR: invalid item quantities: 2 categories but 1 items
 
-TEST 6: Passing file with broken file extension
+TEST 5: Giving correct in-state invoice
+> ./print.sh shopping.iso
+Script runs and displays correct table, all temp files are gone
 
-> ./valid.sh broken.osi
-> ERROR: ".osi" is not a valid file extension
+
+TEST 6: Giving correct out-of-state invoice
+> ./print.sh shopping.oso
+Script runs and displays correct table, all temp files are gone
+
+
+TEST 7: Giving correct in-state invoice with -c flag
+> ./print.sh shopping.iso -c
+Script runs and displays correct table with all items sorted by total price, all temp files are gone
+
+
+TEST 8: Giving correct out-of-state invoice with -c flag
+> ./print.sh shopping.oso
+Script runs and displays correct table with all items sorted by total price, all temp files are gone
+
+
+TEST 9: Giving correct in-state invoice with relative path
+> ./print.sh test_files/shopping.iso
+Scripts runs and displays correct table, all temp files are gone
+
+
+TEST 10: Giving correct in-state invoice with relative path and -c flag
+> ./print.sh test_files/shopping.iso -c
+Scripts runs and displays correct table with all items sorted by total price, all temp files are gone
