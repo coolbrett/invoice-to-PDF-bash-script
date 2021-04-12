@@ -20,7 +20,7 @@ if [[ $# -gt 2 ]] || [[ $# -lt 1 ]]; then
 fi
 
 #Checking that if arg count is 2, that the second arg is "-c"
-if [[ $# -eq 2 ]] && [[ $1 != "-c" ]]; then
+if [[ $# -eq 2 ]] && [[ $2 != "-c" ]]; then
     echo "usage: print.sh <invoice filename [-c]"
     exit 1
 fi
@@ -62,6 +62,11 @@ Category/Item/Cost/Quantity/Total
 categories=$(awk -F: '$1=="categories"{print $2}'  "$invoice")
 clength=$(echo "$categories" | awk -F, '{print NF}')
 index=0
+
+#temp file that may get sorted depending on -c flag existing
+datafile="temp.dat"
+touch $datafile
+> $datafile
 while [ "$clength" -gt $index ]; do
     #get single category, then find lines with items matching category
     category=$(echo "$categories" | cut -d, -f$(($index+1)))
@@ -85,11 +90,24 @@ while [ "$clength" -gt $index ]; do
       echo "total: $total"
       echo "--"
       #here we write to the groff file
-      echo "$category/$product/$price/$quantity/$total" >> $filename
+      echo "$category/$product/$price/$quantity/$total" >> $datafile
     done
     #echo "$data" | cut -d "," -f 2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
     ((index++))
 done
+
+#Check for -c flag
+if [ "$2" == "-c" ]; then
+    sorted="sorted.dat"
+    touch $sorted
+    sort -n -t / -k5 $datafile > $sorted
+    cat $sorted >> $filename
+    rm $sorted
+    else
+      cat $datafile >> $filename
+      rm $datafile
+fi
 echo ".TE" >> $filename
+#tbl tmp.tr | groff > tmp.ps
 
 
