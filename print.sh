@@ -109,5 +109,4 @@ if [ "$2" == "-c" ]; then
 fi
 echo ".TE" >> $filename
 tbl tmp.tr | groff > tmp.ps
-
-
+rm tmp.tr
