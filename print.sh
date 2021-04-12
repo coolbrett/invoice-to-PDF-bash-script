@@ -103,6 +103,7 @@ if [ "$2" == "-c" ]; then
     sort -n -t / -k5 $datafile > $sorted
     cat $sorted >> $filename
     rm $sorted
+    rm $datafile
     else
       cat $datafile >> $filename
       rm $datafile
