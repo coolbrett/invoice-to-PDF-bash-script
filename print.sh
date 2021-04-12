@@ -108,6 +108,6 @@ if [ "$2" == "-c" ]; then
       rm $datafile
 fi
 echo ".TE" >> $filename
-#tbl tmp.tr | groff > tmp.ps
+tbl tmp.tr | groff > tmp.ps
 
 
