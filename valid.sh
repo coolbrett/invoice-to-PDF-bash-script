@@ -16,6 +16,11 @@
 #   exit 6: NC isn't state in .iso file
 #   exit 7: More categories than items
 #   exit 8: Categories field is a number
+#   exit 9: File does not have appropriate contents
+#   exit 10: Contents are in incorrect order
+
+#TODO: Customer Line error
+#TODO: Check order of file to match order it's supposed to be
 
 #first step is to check argument count
 filename=$1
@@ -62,16 +67,54 @@ fi
 
 #NEW CHECK
 #Checking oso file to see if state is NC
+#It's missing NC
 if [ "$extension" == "oso" ]; then
-    state=$(grep "^address:.*" "$filename" | sed 's/^.*: //' | awk '{print substr($0, length($0)-1)}')
+    #NEW
+    state=$(grep "^address:.*" "$filename" | sed 's/^.*: //' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | awk '{print substr($0, length($0)-1)}')
     if [ "$state" == "NC" ]; then
         echo "ERROR: State in .oso invoice is NC"
     fi
 fi
 
+#NEW CHECK
+#Check if all lines are there
+#content=$(grep -v '^$' "$filename")
+requirements=("customer" "address" "categories" "items")
+len=${#requirements[@]}
+for ((i=0; i<len; i++));
+do
+  temp=$(grep "^${requirements[$i]}:" "$filename")
+  #echo "temp is: $temp"
+  if [ "$temp" == "" ]; then
+      echo "ERROR: File does have appropriate contents"
+      exit 9
+  fi
+done
+
+#NEW CHECK
+#Check if contents are in order
+content=$(grep -v '^$' "$filename")
+i=0
+echo "$content" | while read -r line;
+do
+  #echo "$i: $line"
+  if [ $i -lt "$len" ]; then
+      #echo "$line"
+      temp=$(echo "$line" | grep "^${requirements[$i]}:")
+      #echo "$temp"
+      if [ "$temp" == "" ]; then
+          echo "ERROR: $filename contents are in incorrect order"
+          echo "       Order should be: customer, address, categories, items"
+          exit 10
+      fi
+  fi
+  ((i++))
+
+done
+
+
 #Checking to see if item count is valid for amount of categories
 #HERE
-
 category_count=$(($(grep -oP '(?<=categories:).*' "$filename" | tr -cd , | wc -c) + 1))
 items=$(($(grep -oP '(?<=items:).*' "$filename" | tr -cd , | wc -c) + 1))
 
