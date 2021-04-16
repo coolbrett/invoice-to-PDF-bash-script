@@ -14,6 +14,8 @@
 #   exit 2: file name already exist 
 #   exit 3: Length of state is not 2
 #   exit 4: Created file not valid
+#   exit 5: invalid category, matches a Key word.
+#   exit 6: invalid items, must be a number.
 #
 
 #checks the number of args
@@ -88,6 +90,37 @@ do
 done
 
 clength=$(echo $categories | wc -w) #Gets the word count of categories
+#look throught catergories to make sure that the entered catergories are vaild
+
+validCat=1 #if 0 nt valid if 1 valid.
+category=""
+index=0
+while [ $clength -gt $index ]
+do 
+    val=$(echo $categories | cut -d" " -f$(($index+1)))
+    if [ "$val" = "items" ]
+    then 
+        validCat=0
+    elif [ "$val" = "category" ]
+    then 
+        validCat=0
+    elif [ "$val" = "address" ]
+    then 
+        validCat=0
+    elif [ "$val" = "customer" ]
+    then 
+        validCat=0
+    fi
+    ((index++))    
+done    
+
+if [ $validCat -eq 0 ]
+then 
+    echo "ERROR: Invalid category, category can not be \"customer\", \"address\", \"category\", \"items\""
+    exit 5 
+fi
+
+clength=$(echo $categories | wc -w) #Gets the word count of categories
 
 #Asking for the number of items for the categories
 numbers=""
@@ -98,6 +131,20 @@ do
     val=$(echo $categories | cut -d" " -f$(($index+1)))
     echo -n "Please enter the number of \""$val"\" items you want to purchase > "
     read num
+    validNum=0
+    if [[ $num =~ [0-9]+$ ]]; then
+        if [ $num -gt 0 ]
+        then
+            validNum=1
+        fi
+    fi
+
+    if [ $validNum -eq 0 ]
+    then
+        echo "ERROR: Invaild number entered for items, must be a postive number"
+        exit 6
+    fi
+
     if [ "$numbers" = "" ] #if first item
     then
         numbers=$num
