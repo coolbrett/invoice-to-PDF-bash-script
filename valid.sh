@@ -19,8 +19,6 @@
 #   exit 9: File does not have appropriate contents
 #   exit 10: Contents are in incorrect order
 
-#TODO: Customer Line error
-#TODO: Check order of file to match order it's supposed to be
 
 #first step is to check argument count
 filename=$1
