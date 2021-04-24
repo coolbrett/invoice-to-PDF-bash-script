@@ -14,7 +14,7 @@
 #   exit 1: usage error dealing with args
 #   exit 2: file is invalid
 #   exit 3: The given category to insert is not valid for the given invoice
-#
+#   exit 4: The file is not writeable
 
 #check the number of args
 if [ "$#" -gt 2 ] # To many args
@@ -42,6 +42,13 @@ if [ $status -ne 0 ] #checks to see if exit with 0
 then
     echo $filename" is not a valid file"
     exit 2
+fi
+
+#Checks to see if the file is writeable
+if [ ! -w $filename ]
+then 
+    echo $filename" does not have write permissions"
+    exit 4
 fi
 
 #checks to see if the user gave a category arg
